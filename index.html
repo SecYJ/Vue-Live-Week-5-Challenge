@@ -174,8 +174,8 @@
 						class="col-md-6"
 						v-slot="{ errors }"
 						@submit="submitForm"
+						ref="form"
 					>
-						<p>{{ errors }}</p>
 						<div class="mb-3">
 							<label for="email" class="form-label">Email</label>
 							<v-field

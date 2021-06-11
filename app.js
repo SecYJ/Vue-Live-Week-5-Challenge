@@ -2,13 +2,9 @@ const { Form, ErrorMessage, Field, defineRule, configure } = VeeValidate;
 const { required, email, min, max, numeric } = VeeValidateRules;
 const { localize, loadLocaleFromURL } = VeeValidateI18n;
 
-loadLocaleFromURL(
-	// "https://unpkg.com/@vee-validate/i18n@4.1.0/dist/locale/zh_TW.json"
-	"./zh_TW.json"
-);
+loadLocaleFromURL("./zh_TW.json");
 
 configure({
-	// Generates an English message locale generator
 	generateMessage: localize("zh_TW", {
 		messages: {
 			required: "為必填",
@@ -131,28 +127,26 @@ const app = Vue.createApp({
 			};
 			try {
 				const resData = await axios.put(url, obj);
+				const { message, success } = resData.data;
+				if (!success) throw new Error(message);
 				this.getCartList();
-				console.log(resData);
-			} catch (error) {}
+			} catch (error) {
+				alert(error.message);
+			}
 		},
 		async submitForm() {
-			// 出现问题!!
-			console.log(this.form);
 			const obj = { data: { user: { ...this.form } } };
-			this.form = {};
-			console.log(this.form);
-			console.log(obj);
-			// const url = `${apiUrl}/api/${apiPath}/order`;
+			const url = `${apiUrl}/api/${apiPath}/order`;
 
-			// try {
-			// 	const resData = await axios.post(url, obj);
-			// 	const { success, message } = resData.data;
-			// 	if (!success) throw new Error(message);
-			// 	console.log(this.form);
-			// 	console.log(obj);
-			// } catch (error) {
-			// 	// alert(error.message);
-			// }
+			try {
+				const resData = await axios.post(url, obj);
+				const { success, message } = resData.data;
+				this.$refs.form.resetForm();
+				if (!success) throw new Error(message);
+				this.getCartList();
+			} catch (error) {
+				alert(error.message);
+			}
 		},
 	},
 	mounted() {
